@@ -35,7 +35,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_nginx_configuration %}
 data:
-  {{ ingress_nginx_nginx_configuration | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -50,7 +50,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_tcp_services %}
 data:
-  {{ ingress_nginx_tcp_services | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -65,7 +65,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_udp_services %}
 data:
-  {{ ingress_nginx_udp_services | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
