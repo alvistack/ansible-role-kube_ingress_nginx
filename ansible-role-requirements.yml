@@ -26,12 +26,20 @@
   src: https://github.com/alvistack/ansible-role-kubectl
   version: develop
 
+- name: kubernetes-addon-manager
+  src: https://github.com/alvistack/ansible-role-kubernetes-addon-manager
+  version: develop
+
 - name: kubernetes-cni
   src: https://github.com/alvistack/ansible-role-kubernetes-cni
   version: develop
 
 - name: kubernetes-flannel
   src: https://github.com/alvistack/ansible-role-kubernetes-flannel
+  version: develop
+
+- name: kubernetes-metallb
+  src: https://github.com/alvistack/ansible-role-kubernetes-metallb
   version: develop
 
 - name: minikube

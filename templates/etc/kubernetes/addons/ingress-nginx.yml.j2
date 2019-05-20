@@ -35,7 +35,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_nginx_configuration %}
 data:
-  {{ ingress_nginx_nginx_configuration | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -50,7 +50,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_tcp_services %}
 data:
-  {{ ingress_nginx_tcp_services | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -65,7 +65,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 {% if ingress_nginx_udp_services %}
 data:
-  {{ ingress_nginx_udp_services | to_nice_yaml | indent(2) }}
+  {{ ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -221,7 +221,7 @@ subjects:
 
 ---
 apiVersion: apps/v1
-kind: DaemonSet
+kind: Deployment
 metadata:
   name: nginx-ingress-controller
   namespace: ingress-nginx
@@ -230,6 +230,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
@@ -246,8 +247,6 @@ spec:
         prometheus.io/scrape: "true"
     spec:
       serviceAccountName: nginx-ingress-serviceaccount
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: nginx-ingress-controller
           image: {{ ingress_nginx_image_repository }}/nginx-ingress-controller:{{ ingress_nginx_version }}
@@ -256,8 +255,8 @@ spec:
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
             - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-services
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
+            - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
-            - --report-node-internal-ip-address
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
@@ -279,10 +278,8 @@ spec:
           ports:
             - name: http
               containerPort: 80
-              hostPort: 80
             - name: https
               containerPort: 443
-              hostPort: 443
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -302,3 +299,28 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
