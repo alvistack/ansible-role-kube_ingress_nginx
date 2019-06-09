@@ -226,20 +226,20 @@ metadata:
   name: nginx-ingress-controller
   namespace: ingress-nginx
   labels:
-    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/name: nginx-ingress-controller
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/name: nginx-ingress-controller
       app.kubernetes.io/part-of: ingress-nginx
       addonmanager.kubernetes.io/mode: Reconcile
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/name: nginx-ingress-controller
         app.kubernetes.io/part-of: ingress-nginx
         addonmanager.kubernetes.io/mode: Reconcile
       annotations:
@@ -320,7 +320,7 @@ spec:
   type: LoadBalancer
 {% endif %}
   selector:
-    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/name: nginx-ingress-controller
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
   ports:
@@ -330,7 +330,7 @@ spec:
     - name: https
       port: 443
       targetPort: https
-{%- if ingress_nginx_service_type == 'ProxyToService' %}
+{% if ingress_nginx_service_type == 'ProxyToService' %}
 
 ---
 apiVersion: apps/v1
@@ -339,19 +339,19 @@ metadata:
   name: nginx-ingress-proxy-to-service
   namespace: ingress-nginx
   labels:
-    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/name: nginx-ingress-proxy-to-service
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: ingress-nginx
+      app.kubernetes.io/name: nginx-ingress-proxy-to-service
       app.kubernetes.io/part-of: ingress-nginx
       addonmanager.kubernetes.io/mode: Reconcile
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: ingress-nginx
+        app.kubernetes.io/name: nginx-ingress-proxy-to-service
         app.kubernetes.io/part-of: ingress-nginx
         addonmanager.kubernetes.io/mode: Reconcile
     spec:
