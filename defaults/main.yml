@@ -20,6 +20,12 @@ ingress_nginx_version: "0.24.1"
 # ImageRepository sets the container registry to pull images from.
 ingress_nginx_image_repository: "quay.io/kubernetes-ingress-controller"
 
+# Deployment service type (`ProxyToService`, `NodePort`, or `LoadBalancer`).
+ingress_nginx_service_type: "ProxyToService"
+
+# externalTrafficPolicy (`None`, `Local` or `Cluster`).
+ingress_nginx_external_traffic_policy: ~
+
 # Nginx configuration with ConfigMap.
 ingress_nginx_nginx_configuration: {}
 
