@@ -7,7 +7,7 @@
   - Always include default variables from `vars/main.yml`
   - Always use `become: true` with molecule, especially for vagrant
   - Replace `inventory_hostname` with `ansible_hostname`
-  - Add default `ProxyToService` support
+  - Deploy as `hostNetwork: true` with `DaemonSet`
 
 ## 3.0.0 - 2019-05-20
 
