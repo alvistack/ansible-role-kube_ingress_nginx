@@ -193,9 +193,9 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: EnsureExists
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: nginx-ingress-role
+  apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-serviceaccount
@@ -211,9 +211,9 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: EnsureExists
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: nginx-ingress-clusterrole
+  apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-serviceaccount
@@ -326,10 +326,10 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: http
+      targetPort: 80
     - name: https
       port: 443
-      targetPort: https
+      targetPort: 443
 {% if ingress_nginx_service_type == 'ProxyToService' %}
 
 ---
@@ -364,7 +364,6 @@ spec:
             - ingress-nginx
           ports:
             - name: http
-              protocol: TCP
               containerPort: 80
               hostPort: 80
         - name: https
@@ -375,7 +374,6 @@ spec:
             - ingress-nginx
           ports:
             - name: https
-              protocol: TCP
               containerPort: 443
               hostPort: 443
 {%- endif -%}
