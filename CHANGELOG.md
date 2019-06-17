@@ -4,7 +4,7 @@
 
 ### Major Changes
 
-  - Refactor `ProxyToService` as `HostPort` and using `alpine/socat` directly
+  - Support ClusterIP with `alpine/socat`
 
 ## 3.1.0 - 2019-06-13
 
