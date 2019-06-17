@@ -330,48 +330,46 @@ spec:
     - name: https
       port: 443
       targetPort: 443
-{% if ingress_nginx_service_type == 'ProxyToService' %}
+{% if ingress_nginx_service_type == 'HostPort' %}
 
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: nginx-ingress-proxy-to-service
+  name: nginx-ingress-hostport
   namespace: ingress-nginx
   labels:
-    app.kubernetes.io/name: nginx-ingress-proxy-to-service
+    app.kubernetes.io/name: nginx-ingress-hostport
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: nginx-ingress-proxy-to-service
+      app.kubernetes.io/name: nginx-ingress-hostport
       app.kubernetes.io/part-of: ingress-nginx
       addonmanager.kubernetes.io/mode: Reconcile
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: nginx-ingress-proxy-to-service
+        app.kubernetes.io/name: nginx-ingress-hostport
         app.kubernetes.io/part-of: ingress-nginx
         addonmanager.kubernetes.io/mode: Reconcile
     spec:
       containers:
         - name: http
-          image: k8s.gcr.io/proxy-to-service:v2
+          image: alpine/socat:1.0.3
           args:
-            - tcp
-            - "80"
-            - ingress-nginx
+            - tcp-listen:80,fork,reuseaddr
+            - tcp:ingress-nginx:80
           ports:
             - name: http
               containerPort: 80
               hostPort: 80
         - name: https
-          image: k8s.gcr.io/proxy-to-service:v2
-          args:
-            - tcp
-            - "443"
-            - ingress-nginx
+        image: alpine/socat:1.0.3
+        args:
+          - tcp-listen:443,fork,reuseaddr
+          - tcp:ingress-nginx:443
           ports:
             - name: https
               containerPort: 443
