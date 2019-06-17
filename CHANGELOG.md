@@ -4,6 +4,8 @@
 
 ### Major Changes
 
+  - Refactor `ProxyToService` as `HostPort` and using `alpine/socat` directly
+
 ## 3.1.0 - 2019-06-13
 
 ### Major Changes
