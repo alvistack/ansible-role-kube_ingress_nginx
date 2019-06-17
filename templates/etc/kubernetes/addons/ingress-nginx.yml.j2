@@ -366,10 +366,10 @@ spec:
               containerPort: 80
               hostPort: 80
         - name: https
-        image: alpine/socat:1.0.3
-        args:
-          - tcp-listen:443,fork,reuseaddr
-          - tcp:ingress-nginx:443
+          image: alpine/socat:1.0.3
+          args:
+            - tcp-listen:443,fork,reuseaddr
+            - tcp:ingress-nginx:443
           ports:
             - name: https
               containerPort: 443
