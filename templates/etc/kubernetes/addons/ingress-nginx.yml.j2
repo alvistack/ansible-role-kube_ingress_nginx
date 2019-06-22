@@ -192,14 +192,14 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: EnsureExists
-roleRef:
-  kind: Role
-  name: nginx-ingress-role
-  apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-serviceaccount
     namespace: ingress-nginx
+roleRef:
+  kind: Role
+  name: nginx-ingress-role
+  apiGroup: rbac.authorization.k8s.io
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -210,14 +210,14 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: EnsureExists
-roleRef:
-  kind: ClusterRole
-  name: nginx-ingress-clusterrole
-  apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-serviceaccount
     namespace: ingress-nginx
+roleRef:
+  kind: ClusterRole
+  name: nginx-ingress-clusterrole
+  apiGroup: rbac.authorization.k8s.io
 
 ---
 apiVersion: apps/v1
