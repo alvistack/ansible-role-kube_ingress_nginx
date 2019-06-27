@@ -356,7 +356,7 @@ spec:
     spec:
       containers:
         - name: http
-          image: alpine/socat:1.0.3
+          image: {{ socat_image_repository }}/socat:{{ socat_version }}
           args:
             - tcp-listen:80,fork,reuseaddr
             - tcp:ingress-nginx:80
@@ -365,7 +365,7 @@ spec:
               containerPort: 80
               hostPort: 80
         - name: https
-          image: alpine/socat:1.0.3
+          image: {{ socat_image_repository }}/socat:{{ socat_version }}
           args:
             - tcp-listen:443,fork,reuseaddr
             - tcp:ingress-nginx:443

@@ -14,6 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# socat version.
+socat_version: "1.0.3"
+
+# ImageRepository sets the container registry to pull images from.
+socat_image_repository: "docker.io/alpine"
+
 # ingress-nginx version.
 ingress_nginx_version: "0.24.1"
 
