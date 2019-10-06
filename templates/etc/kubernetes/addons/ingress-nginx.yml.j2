@@ -36,7 +36,7 @@ metadata:
 {% if ingress_nginx_nginx_configuration %}
 data:
   {{ ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
 ---
 apiVersion: v1
@@ -51,7 +51,7 @@ metadata:
 {% if ingress_nginx_tcp_services %}
 data:
   {{ ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
 ---
 apiVersion: v1
@@ -66,7 +66,7 @@ metadata:
 {% if ingress_nginx_udp_services %}
 data:
   {{ ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
 ---
 apiVersion: v1
@@ -80,7 +80,7 @@ metadata:
     addonmanager.kubernetes.io/mode: Reconcile
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: nginx-ingress-clusterrole
@@ -139,7 +139,7 @@ rules:
       - update
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: nginx-ingress-role
@@ -185,7 +185,7 @@ rules:
       - get
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: nginx-ingress-role-nisa-binding
@@ -204,7 +204,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: nginx-ingress-clusterrole-nisa-binding
@@ -248,6 +248,8 @@ spec:
         prometheus.io/port: "10254"
         prometheus.io/scrape: "true"
     spec:
+      # wait up to five minutes for the drain of connections
+      terminationGracePeriodSeconds: 300
       serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
@@ -301,6 +303,11 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /wait-shutdown
 
 ---
 apiVersion: v1
@@ -375,4 +382,4 @@ spec:
             - name: https
               containerPort: 443
               hostPort: 443
-{%- endif -%}
+{% endif %}
