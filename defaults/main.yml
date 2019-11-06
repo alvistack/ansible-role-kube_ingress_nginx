@@ -43,3 +43,8 @@ ingress_nginx_tcp_services: {}
 
 # Exposing UDP services with ConfigMap.
 ingress_nginx_udp_services: {}
+
+# Service used to serve HTTP requests not matching any known server name (catch-all).
+# Takes the form "namespace/name". The controller configures NGINX to forward
+# requests to the first port of this Service.
+ingress_nginx_default_backend_service: ~

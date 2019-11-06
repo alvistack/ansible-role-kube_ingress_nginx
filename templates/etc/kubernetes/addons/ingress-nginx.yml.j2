@@ -261,6 +261,9 @@ spec:
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
+{% if ingress_nginx_default_backend_service %}
+            - --default-backend-service={{ ingress_nginx_default_backend_service }}
+{% endif %}
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
