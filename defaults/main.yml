@@ -26,6 +26,12 @@ ingress_nginx_version: "0.26.1"
 # ImageRepository sets the container registry to pull images from.
 ingress_nginx_image_repository: "quay.io/kubernetes-ingress-controller"
 
+# custom-error-pages version.
+ingress_nginx_custom_error_pages_version: "0.4"
+
+# ImageRepository sets the container registry to pull images from.
+ingress_nginx_custom_error_pages_repository: "quay.io/kubernetes-ingress-controller"
+
 # Deployment service type (`ClusterIP`, `NodePort`, `LoadBalancer`, or `ExternalName`).
 ingress_nginx_service_type: "ClusterIP"
 
@@ -44,7 +50,5 @@ ingress_nginx_tcp_services: {}
 # Exposing UDP services with ConfigMap.
 ingress_nginx_udp_services: {}
 
-# Service used to serve HTTP requests not matching any known server name (catch-all).
-# Takes the form "namespace/name". The controller configures NGINX to forward
-# requests to the first port of this Service.
-ingress_nginx_default_backend_service: ~
+# Enable custom error pages as default backend.
+ingress_nginx_custom_error_pages: ~

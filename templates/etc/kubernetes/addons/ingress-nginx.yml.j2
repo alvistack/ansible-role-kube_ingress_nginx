@@ -261,8 +261,8 @@ spec:
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
-{% if ingress_nginx_default_backend_service %}
-            - --default-backend-service={{ ingress_nginx_default_backend_service }}
+{% if ingress_nginx_custom_error_pages %}
+            - --default-backend-service=$(POD_NAMESPACE)/custom-error-pages
 {% endif %}
           securityContext:
             allowPrivilegeEscalation: true
@@ -385,4 +385,55 @@ spec:
             - name: https
               containerPort: 443
               hostPort: 443
+{% endif %}
+{% if ingress_nginx_custom_error_pages %}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: custom-error-pages
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: custom-error-pages
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  selector:
+    app.kubernetes.io/name: custom-error-pages
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+  ports:
+    - port: 80
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-error-pages
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: custom-error-pages
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: custom-error-pages
+      app.kubernetes.io/part-of: ingress-nginx
+      addonmanager.kubernetes.io/mode: Reconcile
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: custom-error-pages
+        app.kubernetes.io/part-of: ingress-nginx
+        addonmanager.kubernetes.io/mode: Reconcile
+    spec:
+      containers:
+        - name: nginx-error-server
+          image: {{ ingress_nginx_custom_error_pages_repository }}/custom-error-pages:{{ ingress_nginx_custom_error_pages_version }}
+          ports:
+            - containerPort: 8080
 {% endif %}
