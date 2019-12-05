@@ -376,6 +376,13 @@ spec:
             - name: http
               containerPort: 80
               hostPort: 80
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
         - name: https
           image: {{ socat_image_repository }}/socat:{{ socat_version }}
           args:
@@ -385,6 +392,13 @@ spec:
             - name: https
               containerPort: 443
               hostPort: 443
+          livenessProbe:
+            tcpSocket:
+              port: 443
+            initialDelaySeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 443
 {% endif %}
 {% if ingress_nginx_custom_error_pages %}
 
