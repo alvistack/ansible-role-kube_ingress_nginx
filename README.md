@@ -1,8 +1,8 @@
 # Ansible Role for NGINX Ingress Controller on Kubernetes
 
-[![Travis](https://img.shields.io/travis/alvistack/ansible-role-kubernetes-ingress-nginx.svg)](https://travis-ci.org/alvistack/ansible-role-kubernetes-ingress-nginx)
-[![GitHub release](https://img.shields.io/github/release/alvistack/ansible-role-kubernetes-ingress-nginx.svg)](https://github.com/alvistack/ansible-role-kubernetes-ingress-nginx)
-[![GitHub license](https://img.shields.io/github/license/alvistack/ansible-role-kubernetes-ingress-nginx.svg)](https://github.com/alvistack/ansible-role-kubernetes-ingress-nginx/blob/master/LICENSE)
+[![Travis](https://img.shields.io/travis/alvistack/ansible-role-kubernetes_ingress_nginx.svg)](https://travis-ci.org/alvistack/ansible-role-kubernetes_ingress_nginx)
+[![GitHub release](https://img.shields.io/github/release/alvistack/ansible-role-kubernetes_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kubernetes_ingress_nginx)
+[![GitHub license](https://img.shields.io/github/license/alvistack/ansible-role-kubernetes_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kubernetes_ingress_nginx/blob/master/LICENSE)
 [![Ansible Role](https://img.shields.io/badge/galaxy-alvistack.kubernetes_ingress_nginx-blue.svg)](https://galaxy.ansible.com/alvistack/kubernetes_ingress_nginx)
 
 Ansible Role for NGINX Ingress Controller on Kubernetes Installation.
