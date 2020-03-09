@@ -36,7 +36,7 @@ metadata:
 {% if ingress_nginx_nginx_configuration %}
 data:
   {{ ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
-{% endif %}
+{%- endif %}
 
 ---
 apiVersion: v1
@@ -51,7 +51,7 @@ metadata:
 {% if ingress_nginx_tcp_services %}
 data:
   {{ ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
-{% endif %}
+{%- endif %}
 
 ---
 apiVersion: v1
@@ -66,7 +66,7 @@ metadata:
 {% if ingress_nginx_udp_services %}
 data:
   {{ ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
-{% endif %}
+{%- endif %}
 
 ---
 apiVersion: v1
@@ -265,7 +265,7 @@ spec:
             - --annotations-prefix=nginx.ingress.kubernetes.io
 {% if ingress_nginx_custom_error_pages %}
             - --default-backend-service=$(POD_NAMESPACE)/custom-error-pages
-{% endif %}
+{%- endif %}
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
@@ -330,10 +330,10 @@ spec:
   type: {{ ingress_nginx_service_type }}
 {% if ingress_nginx_service_type == 'ExternalName' %}
   externalName: {{ ingress_nginx_external_name }}
-{% endif %}
+{%- endif %}
 {% if ingress_nginx_external_traffic_policy %}
   externalTrafficPolicy: {{ ingress_nginx_external_traffic_policy }}
-{% endif %}
+{%- endif %}
   selector:
     app.kubernetes.io/name: nginx-ingress-controller
     app.kubernetes.io/part-of: ingress-nginx
@@ -407,7 +407,7 @@ spec:
           readinessProbe:
             tcpSocket:
               port: 443
-{% endif %}
+{%- endif %}
 {% if ingress_nginx_custom_error_pages %}
 
 ---
@@ -460,4 +460,4 @@ spec:
           ports:
             - containerPort: 8080
               protocol: TCP
-{% endif %}
+{%- endif %}
