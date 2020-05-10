@@ -21,7 +21,7 @@ socat_version: "1.7.3.4-r0"
 socat_image_repository: "docker.io/alpine"
 
 # ingress-nginx version.
-ingress_nginx_version: "0.30.0"
+ingress_nginx_version: "0.32.0"
 
 # ImageRepository sets the container registry to pull images from.
 ingress_nginx_image_repository: "quay.io/kubernetes-ingress-controller"
