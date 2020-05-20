@@ -72,7 +72,7 @@ data:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: nginx-ingress-serviceaccount
+  name: ingress-nginx
   namespace: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
@@ -83,7 +83,7 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: nginx-ingress-clusterrole
+  name: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
@@ -113,6 +113,16 @@ rules:
     verbs:
       - get
       - list
+      - update
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
       - watch
   - apiGroups:
       - ""
@@ -122,27 +132,44 @@ rules:
       - create
       - patch
   - apiGroups:
-      - "extensions"
-      - "networking.k8s.io"
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - "extensions"
-      - "networking.k8s.io"
+      - extensions
+      - networking.k8s.io
     resources:
       - ingresses/status
     verbs:
       - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: EnsureExists
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-nginx
+subjects:
+  - kind: ServiceAccount
+    name: ingress-nginx
+    namespace: ingress-nginx
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: nginx-ingress-role
+  name: ingress-nginx
   namespace: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
@@ -152,9 +179,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - configmaps
-      - pods
-      - secrets
       - namespaces
     verbs:
       - get
@@ -162,12 +186,52 @@ rules:
       - ""
     resources:
       - configmaps
+      - pods
+      - secrets
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - update
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
     resourceNames:
-      # Defaults to "<election-id>-<ingress-class>"
-      # Here: "<ingress-controller-leader>-<nginx>"
-      # This has to be adapted if you change either parameter
-      # when launching the nginx-ingress-controller.
-      - "ingress-controller-leader-nginx"
+      - ingress-controller-leader-nginx
     verbs:
       - get
       - update
@@ -182,44 +246,35 @@ rules:
     resources:
       - endpoints
     verbs:
+      - create
       - get
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: nginx-ingress-role-nisa-binding
+  name: ingress-nginx
   namespace: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: EnsureExists
-subjects:
-  - kind: ServiceAccount
-    name: nginx-ingress-serviceaccount
-    namespace: ingress-nginx
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: nginx-ingress-role
-  apiGroup: rbac.authorization.k8s.io
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: nginx-ingress-clusterrole-nisa-binding
-  labels:
-    app.kubernetes.io/name: ingress-nginx
-    app.kubernetes.io/part-of: ingress-nginx
-    addonmanager.kubernetes.io/mode: EnsureExists
+  name: ingress-nginx
 subjects:
   - kind: ServiceAccount
-    name: nginx-ingress-serviceaccount
+    name: ingress-nginx
     namespace: ingress-nginx
-roleRef:
-  kind: ClusterRole
-  name: nginx-ingress-clusterrole
-  apiGroup: rbac.authorization.k8s.io
 
 ---
 apiVersion: apps/v1
@@ -238,26 +293,32 @@ spec:
       app.kubernetes.io/name: nginx-ingress-controller
       app.kubernetes.io/part-of: ingress-nginx
       addonmanager.kubernetes.io/mode: Reconcile
+  revisionHistoryLimit: 10
+  minReadySeconds: 0
   template:
     metadata:
       labels:
         app.kubernetes.io/name: nginx-ingress-controller
         app.kubernetes.io/part-of: ingress-nginx
         addonmanager.kubernetes.io/mode: Reconcile
-      annotations:
-        prometheus.io/port: "10254"
-        prometheus.io/scrape: "true"
     spec:
-      # wait up to five minutes for the drain of connections
+      dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 300
-      serviceAccountName: nginx-ingress-serviceaccount
+      serviceAccountName: ingress-nginx
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - name: nginx-ingress-controller
+        - name: controller
           image: {{ ingress_nginx_image_repository }}/nginx-ingress-controller:{{ ingress_nginx_version }}
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /wait-shutdown
           args:
             - /nginx-ingress-controller
+            - --election-id=ingress-controller-leader
+            - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
             - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-services
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
