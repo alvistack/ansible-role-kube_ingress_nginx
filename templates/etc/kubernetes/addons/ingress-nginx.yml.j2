@@ -310,6 +310,7 @@ spec:
       containers:
         - name: controller
           image: {{ ingress_nginx_image_repository }}/nginx-ingress-controller:{{ ingress_nginx_version }}
+          imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
               exec:
@@ -436,6 +437,7 @@ spec:
       containers:
         - name: http
           image: {{ socat_image_repository }}/socat:{{ socat_version }}
+          imagePullPolicy: IfNotPresent
           args:
             - tcp-listen:80,fork,reuseaddr
             - tcp:ingress-nginx:80
@@ -453,6 +455,7 @@ spec:
               port: 80
         - name: https
           image: {{ socat_image_repository }}/socat:{{ socat_version }}
+          imagePullPolicy: IfNotPresent
           args:
             - tcp-listen:443,fork,reuseaddr
             - tcp:ingress-nginx:443
@@ -518,6 +521,7 @@ spec:
       containers:
         - name: nginx-error-server
           image: {{ ingress_nginx_custom_error_pages_repository }}/custom-error-pages:{{ ingress_nginx_custom_error_pages_version }}
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               protocol: TCP
