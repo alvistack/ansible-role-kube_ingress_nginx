@@ -14,24 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# socat version.
-socat_version: "latest"
-
-# ImageRepository sets the container registry to pull images from.
-socat_image_repository: "docker.io/alpine"
-
-# ingress-nginx version.
-ingress_nginx_version: "0.32.0"
-
-# ImageRepository sets the container registry to pull images from.
-ingress_nginx_image_repository: "quay.io/kubernetes-ingress-controller"
-
-# custom-error-pages version.
-ingress_nginx_custom_error_pages_version: "0.4"
-
-# ImageRepository sets the container registry to pull images from.
-ingress_nginx_custom_error_pages_repository: "quay.io/kubernetes-ingress-controller"
-
 # Deployment service type (`ClusterIP`, `NodePort`, `LoadBalancer`, or `ExternalName`).
 ingress_nginx_service_type: "ClusterIP"
 
