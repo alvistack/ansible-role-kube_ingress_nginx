@@ -1,6 +1,9 @@
 # Ansible Role for NGINX Ingress Controller on Kubernetes
 
-[![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/alvistack/ansible-role-kube_ingress_nginx/master)](https://gitlab.com/alvistack/ansible-role-kube_ingress_nginx/-/pipelines) [![GitHub release](https://img.shields.io/github/release/alvistack/ansible-role-kube_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kube_ingress_nginx/releases) [![GitHub license](https://img.shields.io/github/license/alvistack/ansible-role-kube_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kube_ingress_nginx/blob/master/LICENSE) [![Ansible Role](https://img.shields.io/badge/galaxy-alvistack.kube_ingress_nginx-blue.svg)](https://galaxy.ansible.com/alvistack/kube_ingress_nginx)
+[![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/alvistack/ansible-role-kube_ingress_nginx/master)](https://gitlab.com/alvistack/ansible-role-kube_ingress_nginx/-/pipelines)
+[![GitHub release](https://img.shields.io/github/release/alvistack/ansible-role-kube_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kube_ingress_nginx/releases)
+[![GitHub license](https://img.shields.io/github/license/alvistack/ansible-role-kube_ingress_nginx.svg)](https://github.com/alvistack/ansible-role-kube_ingress_nginx/blob/master/LICENSE)
+[![Ansible Role](https://img.shields.io/badge/galaxy-alvistack.kube_ingress_nginx-blue.svg)](https://galaxy.ansible.com/alvistack/kube_ingress_nginx)
 
 Ansible Role for NGINX Ingress Controller on Kubernetes Installation.
 
