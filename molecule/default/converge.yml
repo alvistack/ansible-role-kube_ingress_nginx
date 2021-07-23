@@ -36,10 +36,10 @@
 
     - name: include role
       include_role:
-        name: kubernetes_addon_manager
-      tags: kubernetes_addon_manager
+        name: kube_addon_manager
+      tags: kube_addon_manager
 
     - name: include role
       include_role:
-        name: kubernetes_ingress_nginx
-      tags: kubernetes_ingress_nginx
+        name: kube_ingress_nginx
+      tags: kube_ingress_nginx
