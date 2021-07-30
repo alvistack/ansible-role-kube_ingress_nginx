@@ -33,9 +33,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if ingress_nginx_nginx_configuration %}
+{% if kube_ingress_nginx_nginx_configuration %}
 data:
-  {{ ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -48,9 +48,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if ingress_nginx_tcp_services %}
+{% if kube_ingress_nginx_tcp_services %}
 data:
-  {{ ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -63,9 +63,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if ingress_nginx_udp_services %}
+{% if kube_ingress_nginx_udp_services %}
 data:
-  {{ ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -316,7 +316,7 @@ spec:
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
-{% if ingress_nginx_custom_error_pages %}
+{% if kube_ingress_nginx_custom_error_pages %}
             - --default-backend-service=$(POD_NAMESPACE)/custom-error-pages
 {% endif %}
           securityContext:
@@ -382,12 +382,12 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
 spec:
-  type: {{ ingress_nginx_service_type }}
-{% if ingress_nginx_service_type == 'ExternalName' %}
-  externalName: {{ ingress_nginx_external_name }}
+  type: {{ kube_ingress_nginx_service_type }}
+{% if kube_ingress_nginx_service_type == 'ExternalName' %}
+  externalName: {{ kube_ingress_nginx_external_name }}
 {% endif %}
-{% if ingress_nginx_external_traffic_policy %}
-  externalTrafficPolicy: {{ ingress_nginx_external_traffic_policy }}
+{% if kube_ingress_nginx_external_traffic_policy %}
+  externalTrafficPolicy: {{ kube_ingress_nginx_external_traffic_policy }}
 {% endif %}
   selector:
     app.kubernetes.io/name: nginx-ingress-controller
@@ -402,7 +402,7 @@ spec:
       port: 443
       targetPort: 443
       protocol: TCP
-{% if ingress_nginx_service_type == 'ClusterIP' %}
+{% if kube_ingress_nginx_service_type == 'ClusterIP' %}
 
 ---
 apiVersion: apps/v1
@@ -465,7 +465,7 @@ spec:
             tcpSocket:
               port: 443
 {% endif %}
-{% if ingress_nginx_custom_error_pages %}
+{% if kube_ingress_nginx_custom_error_pages %}
 
 ---
 apiVersion: v1
