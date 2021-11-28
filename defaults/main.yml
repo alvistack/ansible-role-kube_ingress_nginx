@@ -24,7 +24,8 @@ kube_ingress_nginx_external_name: ~
 kube_ingress_nginx_external_traffic_policy: ~
 
 # Nginx configuration with ConfigMap.
-kube_ingress_nginx_nginx_configuration: {}
+kube_ingress_nginx_nginx_configuration:
+  allow-snippet-annotations: "true"
 
 # Exposing TCP services with ConfigMap.
 kube_ingress_nginx_tcp_services: {}
