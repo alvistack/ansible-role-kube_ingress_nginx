@@ -26,6 +26,8 @@ kube_ingress_nginx_external_traffic_policy: ~
 # Nginx configuration with ConfigMap.
 kube_ingress_nginx_nginx_configuration:
   allow-snippet-annotations: "true"
+  enable-modsecurity: "true"
+  enable-owasp-modsecurity-crs: "true"
   http-snippet: |
     proxy_cache_path /tmp/nginx-cache levels=1:2 keys_zone=cache:10m max_size=128m inactive=30m use_temp_path=off;
     proxy_cache cache;
