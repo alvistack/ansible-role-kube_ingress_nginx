@@ -33,9 +33,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_nginx_configuration %}
+{% if kube_ingress_nginx_configmap_nginx_configuration %}
 data:
-  {{ kube_ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -48,9 +48,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_tcp_services %}
+{% if kube_ingress_nginx_configmap_tcp_services %}
 data:
-  {{ kube_ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -63,9 +63,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_udp_services %}
+{% if kube_ingress_nginx_configmap_udp_services %}
 data:
-  {{ kube_ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_udp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -268,7 +268,7 @@ subjects:
 apiVersion: networking.k8s.io/v1
 kind: IngressClass
 metadata:
-  name: ingress-nginx
+  name: nginx
   namespace: ingress-nginx
   labels:
     app.kubernetes.io/name: ingress-nginx
