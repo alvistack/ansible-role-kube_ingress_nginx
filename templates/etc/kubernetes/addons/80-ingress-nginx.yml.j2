@@ -33,9 +33,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_nginx_configuration %}
+{% if kube_ingress_nginx_configmap_nginx_configuration %}
 data:
-  {{ kube_ingress_nginx_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_nginx_configuration | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -48,9 +48,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_tcp_services %}
+{% if kube_ingress_nginx_configmap_tcp_services %}
 data:
-  {{ kube_ingress_nginx_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -63,9 +63,9 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
     addonmanager.kubernetes.io/mode: Reconcile
-{% if kube_ingress_nginx_udp_services %}
+{% if kube_ingress_nginx_configmap_udp_services %}
 data:
-  {{ kube_ingress_nginx_udp_services | to_nice_yaml(indent=2) | indent(2) }}
+  {{ kube_ingress_nginx_configmap_udp_services | to_nice_yaml(indent=2) | indent(2) }}
 {%- endif %}
 
 ---
@@ -98,6 +98,7 @@ rules:
       - nodes
       - pods
       - secrets
+      - namespaces
     verbs:
       - list
       - watch
@@ -116,7 +117,6 @@ rules:
       - list
       - watch
   - apiGroups:
-      - extensions
       - networking.k8s.io
     resources:
       - ingresses
@@ -132,7 +132,6 @@ rules:
       - create
       - patch
   - apiGroups:
-      - extensions
       - networking.k8s.io
     resources:
       - ingresses/status
@@ -202,7 +201,6 @@ rules:
       - list
       - watch
   - apiGroups:
-      - extensions
       - networking.k8s.io
     resources:
       - ingresses
@@ -211,7 +209,6 @@ rules:
       - list
       - watch
   - apiGroups:
-      - extensions
       - networking.k8s.io
     resources:
       - ingresses/status
@@ -230,7 +227,7 @@ rules:
     resources:
       - configmaps
     resourceNames:
-      - ingress-controller-leader-nginx
+      - ingress-controller-leader
     verbs:
       - get
       - update
@@ -268,6 +265,19 @@ subjects:
     namespace: ingress-nginx
 
 ---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  controller: k8s.io/ingress-nginx
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -300,7 +310,7 @@ spec:
         kubernetes.io/os: linux
       containers:
         - name: controller
-          image: k8s.gcr.io/ingress-nginx/controller:v0.49.3
+          image: k8s.gcr.io/ingress-nginx/controller:v1.1.2
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -310,6 +320,7 @@ spec:
           args:
             - /nginx-ingress-controller
             - --election-id=ingress-controller-leader
+            - --controller-class=k8s.io/ingress-nginx
             - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
             - --tcp-services-configmap=$(POD_NAMESPACE)/tcp-services
@@ -389,6 +400,9 @@ spec:
 {% if kube_ingress_nginx_external_traffic_policy %}
   externalTrafficPolicy: {{ kube_ingress_nginx_external_traffic_policy }}
 {% endif %}
+  ipFamilyPolicy: SingleStack
+  ipFamilies:
+    - IPv4
   selector:
     app.kubernetes.io/name: nginx-ingress-controller
     app.kubernetes.io/part-of: ingress-nginx
@@ -396,12 +410,14 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
       protocol: TCP
+      targetPort: http
+      appProtocol: http
     - name: https
       port: 443
-      targetPort: 443
       protocol: TCP
+      targetPort: https
+      appProtocol: https
 {% if kube_ingress_nginx_service_type == 'ClusterIP' %}
 
 ---
