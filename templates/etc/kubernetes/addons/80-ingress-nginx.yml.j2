@@ -103,6 +103,13 @@ rules:
       - list
       - watch
   - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - list
+      - watch
+  - apiGroups:
       - ""
     resources:
       - nodes
@@ -238,6 +245,21 @@ rules:
     verbs:
       - create
   - apiGroups:
+      - coordination.k8s.io
+    resourceNames:
+      - ingress-controller-leader
+    resources:
+      - leases
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - create
+  - apiGroups:
       - ""
     resources:
       - events
@@ -310,7 +332,7 @@ spec:
         kubernetes.io/os: linux
       containers:
         - name: controller
-          image: k8s.gcr.io/ingress-nginx/controller:v1.2.1
+          image: registry.k8s.io/ingress-nginx/controller:v1.3.0
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
