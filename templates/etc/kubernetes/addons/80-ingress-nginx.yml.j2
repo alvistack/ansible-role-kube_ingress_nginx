@@ -1,6 +1,6 @@
 ---
 
-# (c) Wong Hoi Sing Edison <hswong3i@pantarei-design.com>
+# Copyright 2022 Wong Hoi Sing Edison <hswong3i@pantarei-design.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -242,7 +242,7 @@ rules:
     resources:
       - configmaps
     resourceNames:
-      - ingress-controller-leader
+      - ingress-nginx-leader
     verbs:
       - get
       - update
@@ -255,7 +255,7 @@ rules:
   - apiGroups:
       - coordination.k8s.io
     resourceNames:
-      - ingress-controller-leader
+      - ingress-nginx-leader
     resources:
       - leases
     verbs:
@@ -340,7 +340,7 @@ spec:
         kubernetes.io/os: linux
       containers:
         - name: controller
-          image: registry.k8s.io/ingress-nginx/controller:v1.4.0
+          image: registry.k8s.io/ingress-nginx/controller:v1.5.1
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -349,7 +349,7 @@ spec:
                   - /wait-shutdown
           args:
             - /nginx-ingress-controller
-            - --election-id=ingress-controller-leader
+            - --election-id=ingress-nginx-leader
             - --controller-class=k8s.io/ingress-nginx
             - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
