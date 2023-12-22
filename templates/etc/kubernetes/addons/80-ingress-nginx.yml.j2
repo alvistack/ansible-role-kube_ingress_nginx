@@ -587,6 +587,8 @@ spec:
             - mountPath: /usr/local/certificates/
               name: webhook-cert
               readOnly: true
+            - mountPath: /tmp/nginx/proxy-cache
+              name: tmp-nginx-proxy-cache
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
@@ -596,6 +598,9 @@ spec:
         - name: webhook-cert
           secret:
             secretName: ingress-nginx-admission
+        - name: tmp-nginx-proxy-cache
+          emptyDir:
+            medium: Memory
 
 ---
 apiVersion: batch/v1
