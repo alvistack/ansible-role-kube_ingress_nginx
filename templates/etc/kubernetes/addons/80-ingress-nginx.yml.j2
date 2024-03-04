@@ -32,7 +32,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx
   namespace: ingress-nginx
@@ -46,7 +46,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission
   namespace: ingress-nginx
@@ -60,7 +60,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx
   namespace: ingress-nginx
@@ -152,7 +152,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission
   namespace: ingress-nginx
@@ -173,7 +173,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx
 rules:
@@ -257,7 +257,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission
 rules:
@@ -278,7 +278,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: EnsureExists
   name: ingress-nginx
   namespace: ingress-nginx
@@ -300,7 +300,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: EnsureExists
   name: ingress-nginx-admission
   namespace: ingress-nginx
@@ -321,7 +321,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: EnsureExists
   name: ingress-nginx
 roleRef:
@@ -342,7 +342,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: EnsureExists
   name: ingress-nginx-admission
 roleRef:
@@ -363,7 +363,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-controller
   namespace: ingress-nginx
@@ -411,7 +411,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-controller
   namespace: ingress-nginx
@@ -451,7 +451,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-controller-admission
   namespace: ingress-nginx
@@ -476,7 +476,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-controller
   namespace: ingress-nginx
@@ -500,7 +500,7 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/part-of: ingress-nginx
-        app.kubernetes.io/version: 1.9.6
+        app.kubernetes.io/version: 1.10.0
         addonmanager.kubernetes.io/mode: Reconcile
     spec:
       containers:
@@ -515,6 +515,7 @@ spec:
             - --validating-webhook=:8443
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
+            - --enable-metrics=false
 {% if kube_ingress_nginx_custom_error_pages %}
             - --default-backend-service=$(POD_NAMESPACE)/custom-error-pages
 {% endif %}
@@ -529,7 +530,7 @@ spec:
                   fieldPath: metadata.namespace
             - name: LD_PRELOAD
               value: /usr/local/lib/libmimalloc.so
-          image: registry.k8s.io/ingress-nginx/controller:v1.9.6
+          image: registry.k8s.io/ingress-nginx/controller:v1.10.0
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
@@ -611,7 +612,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission-create
   namespace: ingress-nginx
@@ -623,7 +624,7 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/part-of: ingress-nginx
-        app.kubernetes.io/version: 1.9.6
+        app.kubernetes.io/version: 1.10.0
         addonmanager.kubernetes.io/mode: Reconcile
       name: ingress-nginx-admission-create
     spec:
@@ -665,7 +666,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission-patch
   namespace: ingress-nginx
@@ -677,7 +678,7 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/name: ingress-nginx
         app.kubernetes.io/part-of: ingress-nginx
-        app.kubernetes.io/version: 1.9.6
+        app.kubernetes.io/version: 1.10.0
         addonmanager.kubernetes.io/mode: Reconcile
       name: ingress-nginx-admission-patch
     spec:
@@ -721,7 +722,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: nginx
 spec:
@@ -736,7 +737,7 @@ metadata:
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
-    app.kubernetes.io/version: 1.9.6
+    app.kubernetes.io/version: 1.10.0
     addonmanager.kubernetes.io/mode: Reconcile
   name: ingress-nginx-admission
 webhooks:
