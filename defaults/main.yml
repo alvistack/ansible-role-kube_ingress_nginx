@@ -15,14 +15,12 @@
 # limitations under the License.
 
 # Deployment service type (`ClusterIP`, `NodePort`, `LoadBalancer`, or `ExternalName`).
-kube_ingress_nginx_service_type: "ClusterIP"
+kube_ingress_nginx_service_type: ClusterIP
 
 # `spec.externalName` for `ExternalName`.
-kube_ingress_nginx_external_name: ~
-
+kube_ingress_nginx_external_name:
 # externalTrafficPolicy (`None`, `Local` or `Cluster`).
-kube_ingress_nginx_external_traffic_policy: ~
-
+kube_ingress_nginx_external_traffic_policy:
 # Nginx configuration with ConfigMap.
 kube_ingress_nginx_configmap_ingress_nginx_controller:
   allow-snippet-annotations: "true"
@@ -35,9 +33,7 @@ kube_ingress_nginx_configmap_ingress_nginx_controller:
 
 # Exposing TCP services with ConfigMap.
 kube_ingress_nginx_configmap_tcp_services: {}
-
 # Exposing UDP services with ConfigMap.
 kube_ingress_nginx_configmap_udp_services: {}
-
 # Enable custom error pages as default backend.
-kube_ingress_nginx_custom_error_pages: ~
+kube_ingress_nginx_custom_error_pages:
