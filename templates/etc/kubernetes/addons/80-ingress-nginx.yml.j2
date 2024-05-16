@@ -370,7 +370,7 @@ metadata:
 {% if kube_ingress_nginx_configmap_ingress_nginx_controller %}
 data:
   {{ kube_ingress_nginx_configmap_ingress_nginx_controller | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
 ---
 apiVersion: v1
@@ -385,7 +385,7 @@ metadata:
 {% if kube_ingress_nginx_configmap_tcp_services %}
 data:
   {{ kube_ingress_nginx_configmap_tcp_services | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
 ---
 apiVersion: v1
@@ -400,8 +400,9 @@ metadata:
 {% if kube_ingress_nginx_configmap_udp_services %}
 data:
   {{ kube_ingress_nginx_configmap_udp_services | to_nice_yaml(indent=2) | indent(2) }}
-{%- endif %}
+{% endif %}
 
+{% if kube_ingress_nginx_controller_service_type %}
 ---
 apiVersion: v1
 kind: Service
@@ -434,12 +435,7 @@ spec:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
     app.kubernetes.io/name: ingress-nginx
-  type: {{ kube_ingress_nginx_service_type }}
-{% if kube_ingress_nginx_service_type == 'ExternalName' %}
-  externalName: {{ kube_ingress_nginx_external_name }}
-{% endif %}
-{% if kube_ingress_nginx_external_traffic_policy %}
-  externalTrafficPolicy: {{ kube_ingress_nginx_external_traffic_policy }}
+  type: {{ kube_ingress_nginx_controller_service_type }}
 {% endif %}
 
 ---
@@ -469,7 +465,7 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ kube_ingress_nginx_controller_kind }}
 metadata:
   labels:
     app.kubernetes.io/component: controller
@@ -481,7 +477,13 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-nginx
 spec:
+{% if kube_ingress_nginx_controller_kind == "Deployment" %}
   replicas: 1
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+{% endif %}  
   minReadySeconds: 0
   revisionHistoryLimit: 10
   selector:
@@ -489,10 +491,6 @@ spec:
       app.kubernetes.io/component: controller
       app.kubernetes.io/instance: ingress-nginx
       app.kubernetes.io/name: ingress-nginx
-  strategy:
-    rollingUpdate:
-      maxUnavailable: 1
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -503,6 +501,9 @@ spec:
         app.kubernetes.io/version: 1.10.1
         addonmanager.kubernetes.io/mode: Reconcile
     spec:
+{% if kube_ingress_nginx_controller_host_network %}
+      hostNetwork: true
+{% endif %}
       containers:
         - args:
             - /nginx-ingress-controller
@@ -516,6 +517,9 @@ spec:
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
             - --enable-metrics=false
+{% if kube_ingress_nginx_controller_host_network %}
+            - --report-node-internal-ip-address
+{% endif %}
 {% if kube_ingress_nginx_custom_error_pages %}
             - --default-backend-service=$(POD_NAMESPACE)/custom-error-pages
 {% endif %}
@@ -590,7 +594,7 @@ spec:
               readOnly: true
             - mountPath: /tmp/nginx/proxy-cache
               name: tmp-nginx-proxy-cache
-      dnsPolicy: ClusterFirst
+      dnsPolicy: {{ kube_ingress_nginx_controller_dnspolicy }}
       nodeSelector:
         kubernetes.io/os: linux
       serviceAccountName: ingress-nginx
@@ -763,69 +767,6 @@ webhooks:
           - ingresses
     sideEffects: None
 
-{% if kube_ingress_nginx_service_type == 'ClusterIP' %}
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: nginx-ingress-controller-proxy
-  namespace: ingress-nginx
-  labels:
-    app.kubernetes.io/name: nginx-ingress-controller-proxy
-    app.kubernetes.io/part-of: ingress-nginx
-    addonmanager.kubernetes.io/mode: Reconcile
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: nginx-ingress-controller-proxy
-      app.kubernetes.io/part-of: ingress-nginx
-      addonmanager.kubernetes.io/mode: Reconcile
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: nginx-ingress-controller-proxy
-        app.kubernetes.io/part-of: ingress-nginx
-        addonmanager.kubernetes.io/mode: Reconcile
-    spec:
-      containers:
-        - name: http
-          image: docker.io/alpine/socat:latest
-          imagePullPolicy: IfNotPresent
-          args:
-            - tcp-listen:80,fork,reuseaddr
-            - tcp:ingress-nginx-controller:80
-          ports:
-            - name: http
-              containerPort: 80
-              hostPort: 80
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: 80
-            initialDelaySeconds: 10
-          readinessProbe:
-            tcpSocket:
-              port: 80
-        - name: https
-          image: docker.io/alpine/socat:latest
-          imagePullPolicy: IfNotPresent
-          args:
-            - tcp-listen:443,fork,reuseaddr
-            - tcp:ingress-nginx-controller:443
-          ports:
-            - name: https
-              containerPort: 443
-              hostPort: 443
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: 443
-            initialDelaySeconds: 10
-          readinessProbe:
-            tcpSocket:
-              port: 443
-
-{% endif %}
 {% if kube_ingress_nginx_custom_error_pages %}
 ---
 apiVersion: v1
