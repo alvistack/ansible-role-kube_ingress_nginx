@@ -16,10 +16,10 @@
 
 # Deployment Service type (`None`, `LoadBalancer` or `NodePort`).
 # See https://kubernetes.github.io/ingress-nginx/deploy/baremetal
-kube_ingress_nginx_controller_service_type:
+kube_ingress_nginx_controller_service_type: "NodePort"
 
 # kind for Controller (`Deployment` or `DaemonSet`).
-kube_ingress_nginx_controller_kind: "DaemonSet"
+kube_ingress_nginx_controller_kind: "Deployment"
 
 # hostNetwork for Controller.
 kube_ingress_nginx_controller_host_network: true
