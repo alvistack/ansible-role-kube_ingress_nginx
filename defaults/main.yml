@@ -19,7 +19,7 @@
 kube_ingress_nginx_controller_service_type: "NodePort"
 
 # kind for Controller (`Deployment` or `DaemonSet`).
-kube_ingress_nginx_controller_kind: "Deployment"
+kube_ingress_nginx_controller_kind: "DaemonSet"
 
 # hostNetwork for Controller.
 kube_ingress_nginx_controller_host_network: true
