@@ -350,7 +350,7 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   labels:
     helm.sh/chart: ingress-nginx-4.10.1
@@ -369,7 +369,6 @@ spec:
       app.kubernetes.io/name: ingress-nginx
       app.kubernetes.io/instance: ingress-nginx
       app.kubernetes.io/component: controller
-  replicas: 1
   revisionHistoryLimit: 10
   minReadySeconds: 0
   template:
