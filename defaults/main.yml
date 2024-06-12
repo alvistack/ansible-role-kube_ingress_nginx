@@ -14,19 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Deployment Service type (`None`, `LoadBalancer` or `NodePort`).
-# See https://kubernetes.github.io/ingress-nginx/deploy/baremetal
-kube_ingress_nginx_controller_service_type:
-
-# kind for Controller (`Deployment` or `DaemonSet`).
-kube_ingress_nginx_controller_kind: "DaemonSet"
-
-# hostNetwork for Controller.
-kube_ingress_nginx_controller_host_network: true
-
-# dnsPolicy for Controller.
-kube_ingress_nginx_controller_dnspolicy: "ClusterFirstWithHostNet"
-
 # Nginx configuration with ConfigMap.
 kube_ingress_nginx_configmap_ingress_nginx_controller:
   allow-snippet-annotations: "true"
@@ -36,12 +23,3 @@ kube_ingress_nginx_configmap_ingress_nginx_controller:
     proxy_cache_valid 200 1s;
     proxy_cache_lock on;
     proxy_cache_use_stale updating;
-
-# Exposing TCP services with ConfigMap.
-kube_ingress_nginx_configmap_tcp_services: {}
-
-# Exposing UDP services with ConfigMap.
-kube_ingress_nginx_configmap_udp_services: {}
-
-# Enable custom error pages as default backend.
-kube_ingress_nginx_custom_error_pages:
